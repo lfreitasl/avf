@@ -13,7 +13,8 @@
 
 ## Introduction
 
-**nf-core/structure** is a bioinformatics pipeline that ...
+**nf-core/structure** is a bioinformatics pipeline that prepares assembly data for a STRUCTURE bayesian clustering data using variant sites based on a reference.
+Note that it doesn't run the STRUCTURE analysis itself (yet) but rather prepare your data as an input of the tool.
 
 <!-- TODO nf-core:
    Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
@@ -25,8 +26,11 @@
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+1. Read .fna assembly data <!--([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)) -->
+2. Align fasta files against a reference ([`Minimap2`](https://github.com/lh3/minimap2)) <!--([`MultiQC`](http://multiqc.info/)) -->
+3. Call variants with resulting alignment ([`bcftools`](https://samtools.github.io/bcftools/howtos/index.html))
+4. Apply some filters to the resulting VCF file ([`vcftools`](https://vcftools.sourceforge.net/index.html))
+5. Finally it converts the final file to a STRUCTURE like format ([`STRUCTURE`](https://web.stanford.edu/group/pritchardlab/structure.html))
 
 ## Usage
 
@@ -34,20 +38,20 @@
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
 <!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
+     Explain what rows and columns represent. For instance (please edit as appropriate): -->
 
 First, prepare a samplesheet with your input data that looks as follows:
 
 `samplesheet.csv`:
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+sample,fna_file_path
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fna
 ```
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
+Each row represents a sample with associated assembly information with .fna extension.
 
--->
+
 
 Now, you can run the pipeline using:
 
@@ -68,7 +72,7 @@ For more details and further functionality, please refer to the [usage documenta
 
 ## Pipeline output
 
-To see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/structure/results) tab on the nf-core website pipeline page.
+To see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/structure/results) tab on this github repository.
 For more details about the output files and reports, please refer to the
 [output documentation](https://nf-co.re/structure/output).
 
