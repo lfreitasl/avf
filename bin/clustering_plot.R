@@ -1,4 +1,4 @@
-#! micromamba run -n base Rscript
+#!/usr/bin/env Rscript
 
 ### Automated structure/admixture plots ###
 
