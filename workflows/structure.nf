@@ -39,7 +39,8 @@ include { INPUT_CHECK                 } from '../subworkflows/local/input_check'
 include { ALIGNMENT_MINIMAP2          } from '../subworkflows/local/alignment'
 include { BCFTOOLS_VARIANT_CALL       } from '../subworkflows/local/variantcall'
 include { VCFTOOLS_FILTER             } from '../subworkflows/local/vcftools_filter'
-include { VCF_TO_STR		      } from '../subworkflows/local/pgdspider_conversion'
+include { VCF_TO_STR		          } from '../subworkflows/local/pgdspider_conversion'
+include { STR_RUN_PLOT		          } from '../subworkflows/local/str_run_plot'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -104,6 +105,12 @@ workflow STRUCTURE {
 	VCFTOOLS_FILTER.out.noncomp,
 	params.thining,
 	params.maxmissing)
+
+    STR_RUN_PLOT(
+        params.meta,
+        VCFTOOLS_FILTER.out.noncomp,
+        VCF_TO_STR.out.str
+    )
 	
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
