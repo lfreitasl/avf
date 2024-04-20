@@ -15,6 +15,8 @@ workflow STR_RUN_PLOT {
 	ch_vcf_meta     = Channel.empty()
 	ch_str_in    	= Channel.empty()
 	ch_str		    = Channel.empty()
+	ch_ffiles		= Channel.empty()
+	ch_qfiles		= Channel.empty()
 	ch_versions     = Channel.empty()
 
 	META_VCF(meta, vcf, str)
