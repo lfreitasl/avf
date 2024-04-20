@@ -1,4 +1,4 @@
-#!/usr/bin/env Rscript
+#! micromamba run -n base Rscript
 
 ##Script for producing metadata to generated vcfs from dartR
 library(dartR)
