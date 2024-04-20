@@ -13,58 +13,58 @@ workflow STR_RUN_PLOT {
 	ch_rep_per_k  = Channel.empty()
 	ch_kvalue     = Channel.empty()
 	ch_vcf_meta        = Channel.empty()
-    ch_str_in     = Channel.empty()
-    ch_versions     = Channel.empty()
+	ch_str_in     = Channel.empty()
+	ch_versions     = Channel.empty()
 
 	META_VCF(meta, vcf, str)
 
-    ch_vcf_meta     = ch_str.mix(META_VCF.out.vcf_meta.ifEmpty([]))
-    ch_versions     = ch_versions.mix(META_VCF.out.versions.first().ifEmpty(null))
+	ch_vcf_meta     = ch_str.mix(META_VCF.out.vcf_meta.ifEmpty([]))
+	ch_versions     = ch_versions.mix(META_VCF.out.versions.first().ifEmpty(null))
     // Transforming csv into a channel
-    ch_vcf_meta
-    .map { meta, sampmeta, vcfs ->
-        return [ meta.splitCsv( header:true, sep:',' ), sampmeta, vcfs ]
-     }
-    .map { meta, sampmeta, vcfs ->
-        return [create_csv_channel(meta[0]), sampmeta, vcfs] 
-    }
-    .set { ch_vcf_meta }
+	ch_vcf_meta
+	.map { meta, sampmeta, vcfs ->
+		return [ meta.splitCsv( header:true, sep:',' ), sampmeta, vcfs ]
+	}
+	.map { meta, sampmeta, vcfs ->
+		return [create_csv_channel(meta[0]), sampmeta, vcfs] 
+	}
+	.set { ch_vcf_meta }
 
-    ch_kvalue       = ch_kvalue.mix(Channel.from(1..params.k_value))
-    ch_rep_per_k    = ch_rep_per_k.mix(Channel.from(1..params.rep_per_k))
-    ch_str_in       = ch_str_in.mix(ch_vcf_meta.combine(ch_kvalue).combine(ch_rep_per_k))
+	ch_kvalue       = ch_kvalue.mix(Channel.from(1..params.k_value))
+	ch_rep_per_k    = ch_rep_per_k.mix(Channel.from(1..params.rep_per_k))
+	ch_str_in       = ch_str_in.mix(ch_vcf_meta.combine(ch_kvalue).combine(ch_rep_per_k))
 
-    STRUCTURE(
-        ch_str_in,
-        params.noadmix,
-        params.freqscorr,
-        params.inferalpha,
-        params.alpha,
-        params.inferlambda,
-        params.lambda,
-        params.ploidy,
-        params.burnin,
-        params.mcmc
-    )
+	STRUCTURE(
+		ch_str_in,
+		params.noadmix,
+		params.freqscorr,
+		params.inferalpha,
+		params.alpha,
+		params.inferlambda,
+		params.lambda,
+		params.ploidy,
+		params.burnin,
+		params.mcmc
+	)
 
-    ch_ffiles       = ch_ffiles.mix(STRUCTURE.out.ffiles.groupTuple().ifEmpty([]))
-    ch_qfiles       = ch_qfiles.mix(STRUCTURE.out.qfiles.groupTuple()ifEmpty([]))
-    ch_versions     = ch_versions.mix(STRUCTURE.out.versions.first().ifEmpty(null))
+	ch_ffiles       = ch_ffiles.mix(STRUCTURE.out.ffiles.groupTuple().ifEmpty([]))
+	ch_qfiles       = ch_qfiles.mix(STRUCTURE.out.qfiles.groupTuple()ifEmpty([]))
+	ch_versions     = ch_versions.mix(STRUCTURE.out.versions.first().ifEmpty(null))
 
-    PLOT_CLUSTERING(
-        ch_ffiles,
-        params.plot_admix
-        params.plot_str,
-        params.popinfo,
-        params.writecsv
-    )
+	PLOT_CLUSTERING(
+		ch_ffiles,
+		params.plot_admix
+		params.plot_str,
+		params.popinfo,
+		params.writecsv
+	)
 	
 	// ch_versions = ch_versions.mix(BCFTOOLS_MPILEUP.out.versions.first())
 
 
-	// emit:
+	emit:
 	// vcf = BCFTOOLS_MPILEUP.out.vcf
-	// versions = ch_versions
+	versions = ch_versions
 }
 
 // Function to get list of [ meta, [ fastq_1, fastq_2 ] ]
