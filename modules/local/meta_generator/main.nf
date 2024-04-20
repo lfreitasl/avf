@@ -1,7 +1,7 @@
 process META_VCF {
     tag "$meta"
     label 'process_single'
-    errorStrategy 'ignore'
+    
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
