@@ -10,10 +10,11 @@ workflow STR_RUN_PLOT {
 	str
 
 	main:
-	ch_rep_per_k  = Channel.empty()
-	ch_kvalue     = Channel.empty()
-	ch_vcf_meta        = Channel.empty()
-	ch_str_in     = Channel.empty()
+	ch_rep_per_k  	= Channel.empty()
+	ch_kvalue     	= Channel.empty()
+	ch_vcf_meta     = Channel.empty()
+	ch_str_in    	= Channel.empty()
+	ch_str		    = Channel.empty()
 	ch_versions     = Channel.empty()
 
 	META_VCF(meta, vcf, str)
