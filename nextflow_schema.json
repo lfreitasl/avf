@@ -20,7 +20,8 @@
                     "pattern": "^\\S+\\.csv$",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/structure/usage#samplesheet-input).",
-                    "fa_icon": "fas fa-file-csv"
+                    "fa_icon": "fas fa-file-csv",
+                    "default": "/mnt/beegfs/scratch/ldflacerda/sabrina_structure/input.csv"
                 },
                 "outdir": {
                     "type": "string",
@@ -283,7 +284,7 @@
     "properties": {
         "reference": {
             "type": "string",
-            "default": "/data/home/matheusml/structure/reference/EC20.fna"
+            "default": "/mnt/beegfs/scratch/ldflacerda/sabrina_structure/genomas_selecionados/GCF_001712995.1.fna"
         },
         "thining": {
             "type": "boolean"
@@ -347,6 +348,10 @@
         },
         "popinfo": {
             "type": "boolean"
+        },
+        "meta": {
+            "type": "string",
+            "default": "/mnt/beegfs/scratch/ldflacerda/sabrina_structure/meta.csv"
         }
     }
 }
