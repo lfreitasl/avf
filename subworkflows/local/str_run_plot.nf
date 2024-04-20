@@ -19,7 +19,7 @@ workflow STR_RUN_PLOT {
 	META_VCF(meta, vcf, str)
 
 	ch_vcf_meta     = ch_str.mix(META_VCF.out.vcf_meta.ifEmpty([]))
-	ch_versions     = ch_versions.mix(META_VCF.out.versions.first().ifEmpty(null))
+	ch_versions     = ch_versions.mix(META_VCF.out.versions.first().ifEmpty([]))
     // Transforming csv into a channel
 	ch_vcf_meta
 	.map { meta, sampmeta, vcfs ->
@@ -49,11 +49,11 @@ workflow STR_RUN_PLOT {
 
 	ch_ffiles       = ch_ffiles.mix(STRUCTURE.out.ffiles.groupTuple().ifEmpty([]))
 	ch_qfiles       = ch_qfiles.mix(STRUCTURE.out.qfiles.groupTuple()ifEmpty([]))
-	ch_versions     = ch_versions.mix(STRUCTURE.out.versions.first().ifEmpty(null))
+	ch_versions     = ch_versions.mix(STRUCTURE.out.versions.first().ifEmpty([]))
 
 	PLOT_CLUSTERING(
 		ch_ffiles,
-		params.plot_admix
+		params.plot_admix,
 		params.plot_str,
 		params.popinfo,
 		params.writecsv
@@ -70,12 +70,12 @@ workflow STR_RUN_PLOT {
 // Function to get list of [ meta, [ fastq_1, fastq_2 ] ]
 def create_csv_channel(LinkedHashMap row) {
     // create meta map
-    def meta = [:]
-    meta.id     = row.filenames
-    meta.n_inds = row.n_inds
-    meta.n_loc  = row.n_locs
+	def meta = [:]
+	meta.id     = row.filenames
+	meta.n_inds = row.n_inds
+	meta.n_loc  = row.n_locs
 
     // add path(s) of the fastq file(s) to the meta map
-    def csv_meta = meta 
-    return csv_meta
+	def csv_meta = meta 
+	return csv_meta
 }
