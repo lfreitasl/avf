@@ -335,6 +335,10 @@
             "type": "integer",
             "default": 10
         },
+        "meta": {
+            "type": "string",
+            "default": "/mnt/beegfs/scratch/ldflacerda/sabrina_structure/meta.csv"
+        },
         "plot_admix": {
             "type": "boolean"
         },
@@ -348,10 +352,6 @@
         },
         "popinfo": {
             "type": "boolean"
-        },
-        "meta": {
-            "type": "string",
-            "default": "/mnt/beegfs/scratch/ldflacerda/sabrina_structure/meta.csv"
         }
     }
 }

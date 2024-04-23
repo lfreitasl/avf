@@ -1,4 +1,4 @@
-#!usr/bin/env Rscript
+#!/usr/bin/env Rscript
 
 ##Script for producing metadata to generated vcfs from dartR
 library(dartR)
