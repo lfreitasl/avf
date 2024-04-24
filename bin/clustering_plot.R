@@ -26,17 +26,26 @@ plotnoloc <- function(files, admixture=F, admbestk){
     else {mypal <- brewer.pal(8, "Dark2")}
     plots<-list()
     for (i in 1:length(files)){
-        alg_tmp <- alignK(files[i])
-        p_temp  <- plotQ(qlist=mergeQ(alg_tmp), sortind="Cluster01",
-                grplabsize=2.5,linesize=0.8,pointsize=3,
-                ordergrp=TRUE, returnplot=T,exportplot=F,
-                showlegend=T, barbordercolour="#A4A4A4",barbordersize=0.1,
-                showyaxis=T, splab=paste("K=",i,sep=""), divcol = "black", divtype = 2,
-                divsize=0.6, divalpha=1,
-                legendkeysize=10,legendtextsize=10,legendmargin=c(2,2,2,0),
-                legendrow=1, showindlab=T, indlabsize=7, useindlab=T,
-                splabsize=7, clustercol=mypal)
-        plots[[i]]<-p_temp
+      k<-i
+      tmp <- as.data.frame(files[i][[1]])
+      tmp$K <- k[1]
+      tmp$Samples <- rownames(tmp)
+      tmp <- melt(tmp, id = c("Samples", "K"))
+      names(tmp)[3:4] <- c("Group", "Posterior")
+      tmp$Samples <- reorder(tmp$Samples, -tmp$Posterior)
+      #tmp$Region <- samp_meta$POP
+      grp.labs <- paste("K =", k)
+      names(grp.labs) <- k
+      p3 <- ggplot(tmp, aes(x = Samples, y = Posterior, fill = Group))
+      p3 <- p3 + geom_bar(stat = "identity")
+      p3 <- p3 + facet_grid(scales = "free_x", space = "free", 
+                            labeller = labeller(K = grp.labs))
+      p3 <- p3 + theme_bw()
+      p3 <- p3 + ylab("Posterior membership probability")
+      p3 <- p3 + theme(legend.position='none')
+      p3 <- p3 + scale_fill_manual(values=mypal)
+      p3 <- p3 + theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 7))
+      plots[[i]]<-p3
     }
     return(plots)
 }
