@@ -151,46 +151,42 @@ build_meta_qvalues<-function(filepath="./", endpattern, metadata, subpattern, st
 }
 
 #Define function for exporting csv with metadata and Q values
-export_meta_qvalues<-function(writemeta){
-    t_adm<-build_meta_qvalues(filepath = "./",endpattern = "*.Q$",metadata = samp_meta,subpattern = "ADMIX_Cluster",str = F)
-    t_str<-build_meta_qvalues(filepath = "./",endpattern = "*_f$",metadata = samp_meta,subpattern = "STR_Cluster",str = T)
+export_meta_qvalues <- function(writemeta) {
+    t_str <- build_meta_qvalues(filepath = "./", endpattern = "*_f$", metadata = samp_meta, subpattern = "STR_Cluster", str = TRUE)
 
-    #Creating a list with merged dataframes (meta, admix and str) for each K
-    merge_list<-list()
-    for (i in (1:length(t_adm))){
-    exclude_cols<-colnames(t_adm[[i]])[startsWith(colnames(t_adm[[i]]),"ADMIX_")]
-    merge_cols <- setdiff(names(t_adm[[i]]), exclude_cols)
-    tm<-merge(t_adm[[i]],t_str[[i]], by=merge_cols)
-    merge_list[[i]]<-tm
+    # Creating a list with merged dataframes (meta and str) for each K
+    merge_list <- list()
+    for (i in 1:length(t_str)) {
+        tm <- t_str[[i]]
+        merge_list[[i]] <- tm
     }
 
-    #Align K values and give them back to the dataframe
-    admcolindex<-character()
-    strcolindex<-character()
-    aligned_runs<-list()
-    for (i in (1:length(merge_list))){
-        admcolindex<- append(admcolindex, paste("ADMIX_Cluster", i, sep=""))
-        strcolindex<- append(strcolindex, paste("STR_Cluster", i, sep=""))
-        slistbyk<- list()
-        slistbyk[[1]]<-data.frame(merge_list[[i]][,admcolindex], row.names=merge_list[[i]][,"samples"])
-        slistbyk[[2]]<-data.frame(merge_list[[i]][,strcolindex], row.names=merge_list[[i]][,"samples"])
-        slistbyk<-alignK(as.qlist(slistbyk))
-        if (i==1){
-            colnames(slistbyk[[1]])[1]<-"ADMIX_Cluster1"
-            colnames(slistbyk[[2]])[1]<-"STR_Cluster1"
+    # Align K values and give them back to the dataframe
+    strcolindex <- character()
+    aligned_runs <- list()
+    for (i in 1:length(merge_list)) {
+        strcolindex <- append(strcolindex, paste("STR_Cluster", i, sep = ""))
+        slistbyk <- list()
+        slistbyk[[1]] <- data.frame(merge_list[[i]][, strcolindex], row.names = merge_list[[i]][,"samples"])
+        slistbyk <- alignK(as.qlist(slistbyk))
+        if (i == 1) {
+            colnames(slistbyk[[1]])[1] <- "STR_Cluster1"
         }
-        aligned_runs[[i]]<-slistbyk
-        }
+        aligned_runs[[i]] <- slistbyk
+    }
 
-    for (i in (1:length(aligned_runs))){
-        for (j in (1:length(aligned_runs[[i]]))){
-            colnames<- colnames(aligned_runs[[i]][[j]])
-            merge_list[[i]][colnames]<-aligned_runs[[i]][[j]][colnames]
+    for (i in 1:length(aligned_runs)) {
+        for (j in 1:length(aligned_runs[[i]])) {
+            colnames <- colnames(aligned_runs[[i]][[j]])
+            merge_list[[i]][colnames] <- aligned_runs[[i]][[j]][colnames]
         }
-        if (writemeta){write.csv(merge_list[[i]],file= paste("meta","_str_admix_","K",i,".csv", sep="") ,quote=F,row.names=F)}
+        if (writemeta) {
+            write.csv(merge_list[[i]], file = paste("meta", "_str_admix_", "K", i, ".csv", sep = ""), quote = FALSE, row.names = FALSE)
+        }
     }
     return(merge_list)
 }
+
 
 #Define function for formatting aligned K into plotting functions:
 format_slist<-function(metalist,str){
