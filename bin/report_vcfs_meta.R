@@ -1,4 +1,4 @@
-#!usr/bin/env Rscript
+#!/usr/bin/env Rscript
 
 ##Script for producing metadata to generated vcfs from dartR
 library(dartR)
@@ -24,7 +24,8 @@ vcf_meta<-data.frame(filenames,n_inds,n_locs)
 #Exporting information
 write.csv(vcf_meta,"./vcfs_info.csv",row.names = F,quote = F)
 
-myg<-gl.read.vcf(files)
+myg<-read.vcfR(files)
+myg<-vcfR2genlight(myg)
 meta<-meta[meta$samples%in%myg$ind.names,]
 meta<-meta[match(myg$ind.names, meta$samples),]
 write.csv(meta, paste(pref,"sorted_meta.csv", sep="_"),row.names = F,quote = F)
