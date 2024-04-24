@@ -50,8 +50,8 @@ workflow STR_RUN_PLOT {
 		params.mcmc
 	)
 
-	ch_ffiles       = ch_ffiles.mix(STRUCTURE.out.ffiles.groupTuple().map{meta,sampmeta,ffiles->return [meta,sampmeta[0][1],ffiles[0]]}.ifEmpty([]))
-	ch_qfiles       = ch_qfiles.mix(STRUCTURE.out.qfiles.groupTuple().map{meta,sampmeta,ffiles->return [meta,sampmeta[0][1],ffiles[0]]}ifEmpty([]))
+	ch_ffiles       = ch_ffiles.mix(STRUCTURE.out.ffiles.groupTuple().ifEmpty([]))
+	ch_qfiles       = ch_qfiles.mix(STRUCTURE.out.qfiles.groupTuple()ifEmpty([]))
 	ch_versions     = ch_versions.mix(STRUCTURE.out.versions.first().ifEmpty([]))
 
 	PLOT_CLUSTERING(
