@@ -27,7 +27,7 @@ plotnoloc <- function(files, admixture=F, admbestk){
     plots<-list()
     for (i in 1:length(files)){
         alg_tmp <- alignK(files[i])
-        p_temp  <- plotQ(qlist=mergeQ(alg_tmp), sortind="Cluster1",
+        p_temp  <- plotQ(qlist=mergeQ(alg_tmp), sortind="Cluster01",
                 grplabsize=2.5,linesize=0.8,pointsize=3,
                 ordergrp=TRUE, returnplot=T,exportplot=F,
                 showlegend=T, barbordercolour="#A4A4A4",barbordersize=0.1,
