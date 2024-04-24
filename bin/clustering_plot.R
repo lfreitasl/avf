@@ -90,12 +90,12 @@ exp_ks<- function(plots, pref, noloc=F){
     for (i in (1:length(plots))){
         count= count + 1
         pdf(file= paste("./", pref, "_K",i,"_runs.pdf",sep=""), width = 14, height = 5.81)
-        if (noloc){grid.arrange(plots[[i]]$plot[[1]])}
+        if (noloc){grid.arrange(plots[[i]])}
         if (!noloc){grid.arrange(plots[[i]])}
         dev.off()
 
         svg(filename = paste("./", pref, "_K",count, "_runs.svg",sep=""), width = 14, height = 5.81)
-        if (noloc){grid.arrange(plots[[i]]$plot[[1]])}
+        if (noloc){grid.arrange(plots[[i]])}
         if (!noloc){grid.arrange(plots[[i]])}
         dev.off()
     }
