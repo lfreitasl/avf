@@ -154,40 +154,34 @@ build_meta_qvalues<-function(filepath="./", endpattern, metadata, subpattern, st
 export_meta_qvalues <- function(writemeta) {
     t_str <- build_meta_qvalues(filepath = "./", endpattern = "*_f$", metadata = samp_meta, subpattern = "STR_Cluster", str = TRUE)
 
-    for (i in 1:length(t_str)) {
-        write.csv(t_str[[i]], file = paste("meta", "_str_", "K", i, ".csv", sep = ""), quote = FALSE, row.names = FALSE)
+    # merge_list<-list()
+    # for (i in (1:length(t_str))){
+    # exclude_cols<-colnames(t_str[[i]])[startsWith(colnames(t_adm[[i]]),"STR_")]
+    # merge_cols <- setdiff(names(t_str[[i]]), exclude_cols)
+    # tm<-merge(t_adm[[i]],t_str[[i]], by=merge_cols)
+    # merge_list[[i]]<-tm
+    # }
+
+
+    strcolindex<-character()
+    aligned_runs<-list()
+    for (i in (1:length(t_str))){
+        strcolindex<- append(strcolindex, paste("STR_Cluster", i, sep=""))
+        slistbyk<- list()
+        slistbyk[[1]]<-data.frame(t_str[[i]][,strcolindex], row.names=t_str[[i]][,"samples"])
+        if (i==1){
+            colnames(slistbyk[[1]])[1]<-"STR_Cluster1"
+        }
+        aligned_runs[[i]]<-slistbyk
+        }
+
+    for (i in (1:length(aligned_runs))){
+        for (j in (1:length(aligned_runs[[i]]))){
+            colnames<- colnames(aligned_runs[[i]][[j]])
+            t_str[[i]][colnames]<-aligned_runs[[i]][[j]][colnames]
+        }
+        if (writemeta){write.csv(t_str[[i]],file= paste("meta","_str_","K",i,".csv", sep="") ,quote=F,row.names=F)}
     }
-    # Creating a list with merged dataframes (meta and str) for each K
-    # merge_list <- list()
-    # for (i in 1:length(t_str)) {
-    #     tm <- t_str[[i]]
-    #     merge_list[[i]] <- tm
-    # }
-
-    # # Align K values and give them back to the dataframe
-    # strcolindex <- character()
-    # aligned_runs <- list()
-    # for (i in 1:length(merge_list)) {
-    #     strcolindex <- append(strcolindex, paste("STR_Cluster", i, sep = ""))
-    #     slistbyk <- list()
-    #     slistbyk[[1]] <- data.frame(merge_list[[i]][, strcolindex], row.names = merge_list[[i]][,"samples"])
-    #     slistbyk <- alignK(as.qlist(slistbyk))
-    #     if (i == 1) {
-    #         colnames(slistbyk[[1]])[1] <- "STR_Cluster1"
-    #     }
-    #     aligned_runs[[i]] <- slistbyk
-    # }
-
-    # for (i in 1:length(aligned_runs)) {
-    #     for (j in 1:length(aligned_runs[[i]])) {
-    #         colnames <- colnames(aligned_runs[[i]][[j]])
-    #         merge_list[[i]][colnames] <- aligned_runs[[i]][[j]][colnames]
-    #     }
-    #     if (writemeta) {
-    #         write.csv(merge_list[[i]], file = paste("meta", "_str_admix_", "K", i, ".csv", sep = ""), quote = FALSE, row.names = FALSE)
-    #     }
-    # }
-    # return(merge_list)
     return(t_str)
 }
 
