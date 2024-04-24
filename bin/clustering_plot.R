@@ -153,7 +153,8 @@ build_meta_qvalues<-function(filepath="./", endpattern, metadata, subpattern, st
 #Define function for exporting csv with metadata and Q values
 export_meta_qvalues <- function(writemeta) {
     t_str <- build_meta_qvalues(filepath = "./", endpattern = "*_f$", metadata = samp_meta, subpattern = "STR_Cluster", str = TRUE)
-
+    len <- sapply(t_str, length)
+    t_str<-t_str[order(len)]
     # merge_list<-list()
     # for (i in (1:length(t_str))){
     # exclude_cols<-colnames(t_str[[i]])[startsWith(colnames(t_adm[[i]]),"STR_")]
@@ -180,7 +181,9 @@ export_meta_qvalues <- function(writemeta) {
             colnames<- colnames(aligned_runs[[i]][[j]])
             t_str[[i]][colnames]<-aligned_runs[[i]][[j]][colnames]
         }
-        if (writemeta){write.csv(t_str[[i]],file= paste("meta","_str_","K",i,".csv", sep="") ,quote=F,row.names=F)}
+        if (writemeta){
+          write.csv(t_str[[i]],file= paste("meta","_str_","K",(i),".csv", sep="") ,quote=F,row.names=F)
+        }
     }
     return(t_str)
 }
