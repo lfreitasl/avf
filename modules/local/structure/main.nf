@@ -52,6 +52,7 @@ process STRUCTURE {
     sed -i 's/#define NUMINDS[[:space:]]*[0-9]*\\(\\.[0-9]\\+\\)\\{0,1\\}/#define NUMINDS ${meta.n_inds} /' ./mainparams
     sed -i 's/#define NUMLOCI[[:space:]]*[0-9]*\\(\\.[0-9]\\+\\)\\{0,1\\}/#define NUMLOCI ${meta.n_loc} /' ./mainparams
     sed -i 's/#define PLOIDY[[:space:]]*[0-9]*\\(\\.[0-9]\\+\\)\\{0,1\\}/#define PLOIDY ${ploidy} /' ./mainparams
+    sed -i 's/#define POPDATA[[:space:]]*[0-9]*\\(\\.[0-9]\\+\\)\\{0,1\\}/#define POPDATA 1 /' ./mainparams
 
     structure_threader run \\
         -Klist $k_value \\
