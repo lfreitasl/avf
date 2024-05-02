@@ -2,7 +2,7 @@
 
 ### Automated structure/admixture plots ###
 
-# Load the libraries for this R code 
+# Load the libraries for this R code
 library(pophelper)
 library(grid)
 library(gridExtra)
@@ -17,7 +17,7 @@ args = commandArgs(trailingOnly=TRUE)
 plotnoloc <- function(files, admixture=F, admbestk){
     #Generating number of colors
     getcolours <- colorRampPalette(brewer.pal(8, "Dark2"))
-    
+
     if (admixture) {
         if (admbestk){adm_bestk()}
     }
@@ -38,7 +38,7 @@ plotnoloc <- function(files, admixture=F, admbestk){
       names(grp.labs) <- k
       p3 <- ggplot(tmp, aes(x = Samples, y = Posterior, fill = Group))
       p3 <- p3 + geom_bar(stat = "identity")
-      p3 <- p3 + facet_grid(scales = "free_x", space = "free", 
+      p3 <- p3 + facet_grid(scales = "free_x", space = "free",
                             labeller = labeller(K = grp.labs))
       p3 <- p3 + theme_bw()
       p3 <- p3 + ylab("Posterior membership probability")
@@ -53,11 +53,13 @@ plotnoloc <- function(files, admixture=F, admbestk){
 
 #Define plot function withloc
 plotloc<- function(files, samp_meta, admixture=F, admbestk){
+    getcolours <- colorRampPalette(brewer.pal(8, "Dark2"))
     if (admixture){
         if(admbestk){adm_bestk()}
     }
     if (length(files)>8){mypal <- getcolours(length(files))}
     else {mypal <- brewer.pal(8, "Dark2")}
+    samp_meta<-samp_meta[match(row.names(files[1][[1]]), samp_meta$samples),]
     plots<-list()
     for (i in 1:length(files)){
         k<-i
@@ -71,7 +73,7 @@ plotloc<- function(files, samp_meta, admixture=F, admbestk){
         names(grp.labs) <- k
         p3 <- ggplot(tmp, aes(x = Samples, y = Posterior, fill = Group))
         p3 <- p3 + geom_bar(stat = "identity")
-        p3 <- p3 + facet_grid(K ~ Region, scales = "free_x", space = "free", 
+        p3 <- p3 + facet_grid(K ~ Region, scales = "free_x", space = "free",
                             labeller = labeller(K = grp.labs))
         p3 <- p3 + theme_bw()
         p3 <- p3 + ylab("Posterior membership probability")
