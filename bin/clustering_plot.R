@@ -59,6 +59,7 @@ plotloc<- function(files, samp_meta, admixture=F, admbestk){
     }
     if (length(files)>8){mypal <- getcolours(length(files))}
     else {mypal <- brewer.pal(8, "Dark2")}
+    samp_meta<-samp_meta[match(row.names(files[1][[1]]), samp_meta$samples),]
     plots<-list()
     for (i in 1:length(files)){
         k<-i
